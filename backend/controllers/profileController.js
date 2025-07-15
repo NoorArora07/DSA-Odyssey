@@ -2,7 +2,7 @@ import { request, response } from 'express';
 import dotenv from 'dotenv';
 import User from '../models/users.model.js';
 import Discuss from "../models/discuss.model.js";
-import LeaderBoard from "../models/leaderboard.model.js";
+//import LeaderBoard from "../models/leaderboard.model.js";
 dotenv.config();
 
 export const viewProfile = async (request, response) => {
@@ -107,3 +107,38 @@ export const viewProfile = async (request, response) => {
 //     res.status(500).json({ error: "Internal server error." });
 //   }
 // };
+
+
+export const viewLeader_board = async (req, res) => {
+  const userEmail = req.user.email;
+
+  try {
+    // Step 1: Get all users sorted by score
+    const allUsers = await User.find().sort({ score: -1 });
+
+    // Step 2: Create leaderboard with dynamic ranks
+    const leaderboard = allUsers.map((user, index) => ({
+      email: user.email,
+      user_name: user.user_name,
+      score: user.score,
+      rank: index + 1
+    }));
+
+    // Step 3: Find the current user's rank
+    const currentUserEntry = leaderboard.find(user => user.email === userEmail);
+
+    if (!currentUserEntry) {
+      return res.status(404).json({ message: "User not found in leaderboard." });
+    }
+
+    // Step 4: Return both user’s details and full leaderboard
+    res.status(200).json({
+      user: currentUserEntry,
+      leaderboard: leaderboard.slice(0, 50) // optional: top 50 only
+    });
+
+  } catch (error) {
+    console.error("Error fetching leaderboard:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

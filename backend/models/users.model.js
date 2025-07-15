@@ -40,7 +40,12 @@ const loginSchema = new mongoose.Schema(
         currentStreak: {
             type: Number,
             default: 0
-        }
+        },
+        completedQuestions: {
+            type: Map,
+            of: [String], // e.g., "1" => ["q1", "q2"]
+            default:{}
+  }
 
     }, {
     timestamps: true //createdAt, updatedAt

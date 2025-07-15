@@ -7,8 +7,10 @@ import { Server } from "socket.io";
 import cors from 'cors';
 import authRoutes from './routes/authRoutes.js';
 import profileRoutes from './routes/profRoutes.js';
-import leaderBoardRoutes from './routes/leaderboardRoutes.js';
+//import leaderBoardRoutes from './routes/leaderboardRoutes.js';
 import discussRoutes from './routes/discussRoutes.js';
+import progressRoutes from './routes/progressRoutes.js';
+import levelRoutes from './routes/levelRoutes.js';
 
 dotenv.config();
 console.log("MONGO URI: ", process.env.MONGO_URI);
@@ -36,8 +38,10 @@ app.use(cors( {
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
-app.use("/api/leader_board",leaderBoardRoutes)
-app.use("/api/discuss",discussRoutes)
+//app.use("/api/leader_board",leaderBoardRoutes);
+app.use("/api/discuss",discussRoutes);
+app.use("/api/progress", progressRoutes);
+app.use("/api/level",levelRoutes);
 
 // Start server
 server.listen(5090, () => {
